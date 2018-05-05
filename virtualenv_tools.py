@@ -27,7 +27,7 @@ _activation_path_re = re.compile(
 def update_activation_script(script_filename, new_path):
     """Updates the paths for the activate shell scripts."""
     with open(script_filename) as f:
-        lines = list(f)
+        lines = f.readlines()
 
     def _handle_sub(match):
         text = match.group()
@@ -51,7 +51,7 @@ def update_activation_script(script_filename, new_path):
 def update_script(script_filename, new_path):
     """Updates shebang lines for actual scripts."""
     with open(script_filename) as f:
-        lines = list(f)
+        lines = f.readlines()
     if not lines:
         return
 
