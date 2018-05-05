@@ -10,22 +10,18 @@
     :copyright: (c) 2012 by Fireteam Ltd.
     :license: BSD, see LICENSE for more details.
 """
-import os
-import re
-import sys
 import marshal
 import optparse
+import os
+import re
 import subprocess
+import sys
 from types import CodeType
 
-
-ACTIVATION_SCRIPTS = [
-    'activate',
-    'activate.csh',
-    'activate.fish'
-]
+ACTIVATION_SCRIPTS = ['activate', 'activate.csh', 'activate.fish']
 _pybin_match = re.compile(r'^python\d+\.\d+$')
-_activation_path_re = re.compile(r'^(?:set -gx |setenv |)VIRTUAL_ENV[ =]"(.*?)"\s*$')
+_activation_path_re = re.compile(
+    r'^(?:set -gx |setenv |)VIRTUAL_ENV[ =]"(.*?)"\s*$')
 
 
 def update_activation_script(script_filename, new_path):
@@ -96,11 +92,11 @@ def update_pyc(filename, new_path):
         code = marshal.load(f)
 
     def _make_code(code, filename, consts):
-        return CodeType(code.co_argcount, code.co_nlocals, code.co_stacksize,
-                        code.co_flags, code.co_code, tuple(consts),
-                        code.co_names, code.co_varnames, filename,
-                        code.co_name, code.co_firstlineno, code.co_lnotab,
-                        code.co_freevars, code.co_cellvars)
+        return CodeType(code.co_argcount, code.co_nlocals,
+                        code.co_stacksize, code.co_flags, code.co_code,
+                        tuple(consts), code.co_names, code.co_varnames,
+                        filename, code.co_name, code.co_firstlineno,
+                        code.co_lnotab, code.co_freevars, code.co_cellvars)
 
     def _process(code):
         new_filename = new_path
@@ -207,8 +203,8 @@ def reinitialize_virtualenv(path):
         print('error: could not detect python version of virtualenv %s' % path)
         return False
 
-    sys_py_executable = subprocess.Popen(['which', py_ver],
-        stdout=subprocess.PIPE).communicate()[0].strip()
+    sys_py_executable = subprocess.Popen(
+        ['which', py_ver], stdout=subprocess.PIPE).communicate()[0].strip()
 
     if not sys_py_executable:
         print('error: could not find system version for expected python ' \
@@ -218,8 +214,8 @@ def reinitialize_virtualenv(path):
     lib_dir = os.path.join(path, 'lib', py_ver)
 
     args = ['virtualenv', '-p', sys_py_executable]
-    if not os.path.isfile(os.path.join(lib_dir,
-            'no-global-site-packages.txt')):
+    if not os.path.isfile(
+            os.path.join(lib_dir, 'no-global-site-packages.txt')):
         args.append('--system-site-packages')
 
     for filename in os.listdir(lib_dir):
@@ -237,13 +233,17 @@ def reinitialize_virtualenv(path):
 
 def main():
     parser = optparse.OptionParser()
-    parser.add_option('--reinitialize', action='store_true',
-                      help='Updates the python installation '
-                      'and reinitializes the virtualenv.')
-    parser.add_option('--update-path', help='Update the path for all '
-                      'required executables and helper files that are '
-                      'supported to the new python prefix.  You can also set '
-                      'this to "auto" for autodetection.')
+    parser.add_option(
+        '--reinitialize',
+        action='store_true',
+        help='Updates the python installation '
+        'and reinitializes the virtualenv.')
+    parser.add_option(
+        '--update-path',
+        help='Update the path for all '
+        'required executables and helper files that are '
+        'supported to the new python prefix.  You can also set '
+        'this to "auto" for autodetection.')
     options, paths = parser.parse_args()
     if not paths:
         paths = ['.']
