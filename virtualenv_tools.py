@@ -50,7 +50,7 @@ def update_activation_script(script_filename, new_path):
 
 def update_script(script_filename, new_path):
     """Updates shebang lines for actual scripts."""
-    with open(script_filename) as f:
+    with open(script_filename, encoding="ISO-8859-1") as f:
         lines = f.readlines()
     if not lines:
         return
